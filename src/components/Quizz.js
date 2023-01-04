@@ -63,8 +63,8 @@ const Quizz = () => {
     }
   };
 
-  const submitAnswer = (answer, i) => {
-    if (answer === allQuestions[i].correct_answer) {
+  const submitAnswer = (answer, i, currentQuestion) => {
+    if (answer === allQuestions[currentQuestion].correct_answer) {
       setResult(result + 1);
     } else {
       setWrong(Wrong + 1);
@@ -74,50 +74,61 @@ const Quizz = () => {
   };
 
   return (
-    <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'100vh'}}>
-  <div className="quiz-container">
-      <div style={{fontSize:'36px',fontWeight:'500'}}>
-        Question
-      </div>
-      <div className="questions_numbers">
-        <div style={{fontSize:'18px',fontWeight:'bold'}}>
-          {currentQuestion + 1} of {allQuestions.length}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <div className="quiz-container">
+        <div style={{ fontSize: "36px", fontWeight: "500" }}>Question</div>
+        <div className="questions_numbers">
+          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+            {currentQuestion + 1} of {allQuestions.length}
+          </div>
+          <div className="questions">
+            {allQuestions[currentQuestion]
+              ? allQuestions[currentQuestion]?.question
+              : "loading"}
+          </div>
         </div>
-        <div className="questions">
-          {allQuestions[currentQuestion]
-            ? allQuestions[currentQuestion]?.question
-            : "loading"}
+        {console.log(allOptions, "allOptions")}
+        <div className="option_container">
+          {allOptions &&
+            allOptions.map((ans, i) => (
+              <div
+                className={
+                  currentQuestion ===
+                    allAnswers[currentQuestion]?.currentQuestion &&
+                  i === allAnswers[currentQuestion]?.id
+                    ? "selected-item"
+                    : "q-item"
+                }
+                key={i}
+                onClick={() => submitAnswer(ans, i, currentQuestion)}
+              >
+                {ans}
+              </div>
+            ))}
         </div>
-      </div>
-      {console.log(allOptions, "allOptions")}
-      <div className="option_container">
-        {allOptions &&
-          allOptions.map((ans, i) => (
-            <div
-              className={
-                currentQuestion ===
-                  allAnswers[currentQuestion]?.currentQuestion &&
-                i === allAnswers[currentQuestion]?.id
-                  ? "selected-item"
-                  : "q-item"
-              }
-              key={i}
-              onClick={() => submitAnswer(ans, i, currentQuestion)}
-            >
-              {ans}
-            </div>
-          ))}
-      </div>
-      <div className="button-container">
-        {currentQuestion > 0 && (
-          <button onClick={() => handleClick("prev")} className='prev'> Prev</button>
-        )}
-        <button onClick={() => navigate("/")} className='quit'>Quit</button>
-        <button onClick={() => handleClick("next")} className='next'>Next</button>
+        <div className="button-container">
+          {currentQuestion > 0 && (
+            <button onClick={() => handleClick("prev")} className="prev">
+              {" "}
+              Prev
+            </button>
+          )}
+          <button onClick={() => navigate("/")} className="quit">
+            Quit
+          </button>
+          <button onClick={() => handleClick("next")} className="next">
+            Next
+          </button>
+        </div>
       </div>
     </div>
-    </div>
-   
   );
 };
 

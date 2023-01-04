@@ -6,6 +6,7 @@ const FinalPage = () => {
 
   useEffect(() => {
     let newObject = localStorage.getItem("finalScore");
+    console.log(JSON.parse(newObject));
     setResult(JSON.parse(newObject));
   }, []);
 
@@ -33,7 +34,13 @@ const FinalPage = () => {
         <div className="result-container">
           <div>
             <center>
-              <h1 style={{fontSize:'4rem',color:'#187498',fontWeight:'400'}}>
+              <h1
+                style={{
+                  fontSize: "4rem",
+                  color: "#187498",
+                  fontWeight: "400",
+                }}
+              >
                 Your Score :{" "}
                 {result &&
                   percentage(
@@ -47,8 +54,24 @@ const FinalPage = () => {
           {result &&
             Object.keys(result).map((ele) => (
               <div className="score-board">
-                <div style={{fontWeight:'600',fontSize:'1rem',color:'#757575'}}>{ele.toUpperCase()}</div>
-                <div style={{fontWeight:'600',fontSize:'1.2rem',color:'#757575'}}>{result[ele]}</div>
+                <div
+                  style={{
+                    fontWeight: "600",
+                    fontSize: "1rem",
+                    color: "#757575",
+                  }}
+                >
+                  {ele.toUpperCase()}
+                </div>
+                <div
+                  style={{
+                    fontWeight: "600",
+                    fontSize: "1.2rem",
+                    color: "#757575",
+                  }}
+                >
+                  {result[ele]}
+                </div>
               </div>
             ))}
         </div>
