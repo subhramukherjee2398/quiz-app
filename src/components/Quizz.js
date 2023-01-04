@@ -26,9 +26,16 @@ const Quizz = () => {
   }, []);
 
   useEffect(() => {
-    allQuestions[currentQuestion]?.incorrect_answers.push(
-      allQuestions[currentQuestion]?.correct_answer
-    );
+    console.warn("calling", currentQuestion);
+    if (
+      !allQuestions[currentQuestion]?.incorrect_answers.includes(
+        allQuestions[currentQuestion]?.correct_answer
+      )
+    ) {
+      allQuestions[currentQuestion]?.incorrect_answers.push(
+        allQuestions[currentQuestion]?.correct_answer
+      );
+    }
     setAlloptions(allQuestions[currentQuestion]?.incorrect_answers);
     if (currentQuestion === 5) {
       //write logic
@@ -42,7 +49,7 @@ const Quizz = () => {
       setSkip(skip + 1);
     } else {
       console.log(allAnswers, "allAnswers");
-     // setCureentQuestion(currentQuestion - 1);
+      setCureentQuestion(currentQuestion - 1);
     }
   };
 
