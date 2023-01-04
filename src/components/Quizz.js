@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./quizz.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 const Quizz = () => {
   const [allQuestions, setallQuestions] = useState([]);
   const [allAnswers, setAllanswers] = useState([]);
@@ -9,6 +11,7 @@ const Quizz = () => {
   const [skip, setSkip] = useState(0);
   const [result, setResult] = useState(0);
   const [Wrong, setWrong] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -26,7 +29,6 @@ const Quizz = () => {
   }, []);
 
   useEffect(() => {
-    console.warn("calling", currentQuestion);
     if (
       !allQuestions[currentQuestion]?.incorrect_answers.includes(
         allQuestions[currentQuestion]?.correct_answer
@@ -38,8 +40,14 @@ const Quizz = () => {
     }
     setAlloptions(allQuestions[currentQuestion]?.incorrect_answers);
     if (currentQuestion === 5) {
-      //write logic
-      alert("finish");
+      let resultData = {
+        "total numbers of questions": allQuestions.length,
+        "number of attempt questions": allQuestions.length - skip,
+        "number of correct questions": result,
+        "number of wrong questions": Wrong,
+      };
+      localStorage.setItem("finalScore", JSON.stringify(resultData));
+      navigate("/finalPage");
     }
   }, [currentQuestion]);
 
@@ -50,6 +58,8 @@ const Quizz = () => {
     } else {
       console.log(allAnswers, "allAnswers");
       setCureentQuestion(currentQuestion - 1);
+      console.log(allAnswers, "allAnswers");
+      console.log(allQuestions[currentQuestion]?.question);
     }
   };
 
@@ -60,16 +70,17 @@ const Quizz = () => {
       setWrong(Wrong + 1);
     }
     setCureentQuestion(currentQuestion + 1);
-    setAllanswers([...allAnswers, { id: i, answer }]);
+    setAllanswers([...allAnswers, { id: i, answer, currentQuestion }]);
   };
 
   return (
-    <div className="quiz-container">
-      <div>
-        Questions your score:{result} skip:{skip} wrong:{Wrong}
+    <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'100vh'}}>
+  <div className="quiz-container">
+      <div style={{fontSize:'36px',fontWeight:'500'}}>
+        Question
       </div>
       <div className="questions_numbers">
-        <div>
+        <div style={{fontSize:'18px',fontWeight:'bold'}}>
           {currentQuestion + 1} of {allQuestions.length}
         </div>
         <div className="questions">
@@ -83,20 +94,30 @@ const Quizz = () => {
         {allOptions &&
           allOptions.map((ans, i) => (
             <div
-              className="q-item"
+              className={
+                currentQuestion ===
+                  allAnswers[currentQuestion]?.currentQuestion &&
+                i === allAnswers[currentQuestion]?.id
+                  ? "selected-item"
+                  : "q-item"
+              }
               key={i}
-              onClick={() => submitAnswer(ans, currentQuestion)}
+              onClick={() => submitAnswer(ans, i, currentQuestion)}
             >
               {ans}
             </div>
           ))}
       </div>
       <div className="button-container">
-        <button onClick={() => handleClick("prev")}>Prev</button>
-        <button onClick={() => window.location.reload()}>Quit</button>
-        <button onClick={() => handleClick("next")}>Next</button>
+        {currentQuestion > 0 && (
+          <button onClick={() => handleClick("prev")} className='prev'> Prev</button>
+        )}
+        <button onClick={() => navigate("/")} className='quit'>Quit</button>
+        <button onClick={() => handleClick("next")} className='next'>Next</button>
       </div>
     </div>
+    </div>
+   
   );
 };
 
