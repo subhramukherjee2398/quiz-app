@@ -15,7 +15,7 @@ const Quizz = () => {
 
   useEffect(() => {
     axios
-      .get(`https://opentdb.com/api.php?amount=5`)
+      .get(`https://opentdb.com/api.php?amount=20`)
       .then((res) => {
         setallQuestions(res.data.results);
         res.data.results[currentQuestion]?.incorrect_answers.push(
@@ -39,7 +39,7 @@ const Quizz = () => {
       );
     }
     setAlloptions(allQuestions[currentQuestion]?.incorrect_answers);
-    if (currentQuestion === 5) {
+    if (currentQuestion === 20) {
       let resultData = {
         "total numbers of questions": allQuestions.length,
         "number of attempt questions": allQuestions.length - skip,
